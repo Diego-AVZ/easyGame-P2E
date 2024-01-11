@@ -2,20 +2,23 @@
 pragma solidity ^0.8.0;
 
 contract easyGame {
-    mapping(address => uint32) public actPoints;
-    mapping(address => uint32) public xpPoints;
-    mapping(address => uint8) public level;
+    mapping(address => uint32) public t; // TOKENS
+    mapping(address => uint32) public xp; //XP points
+    mapping(address => uint8) public lev; // Level
+ 
+    uint public allPoints;
 
     // G1 ___________
 
     mapping(address => uint) public lastClaim1;
-    mapping(address => uint) public power1;
+    mapping(address => uint) public p1; // Power in Game1
     
     function claimPointsToUserG1() public {
-        require(block.timestamp >= lastClaim1[msg.sender] + 1 hours);
-        if(power1[msg.sender]==1){
-            actPoints[msg.sender] = actPoints[msg.sender] + 10;
-            xpPoints[msg.sender] = xpPoints[msg.sender] + 5;
+        //require(block.timestamp >= lastClaim1[msg.sender] + 1 hours);
+        if(p1[msg.sender]==0){
+            t[msg.sender] = t[msg.sender] + 10;
+            xp[msg.sender] = xp[msg.sender] + 5;
+            allPoints = allPoints + 10;
         }
         lastClaim1[msg.sender] = block.timestamp;
     }
@@ -29,38 +32,38 @@ contract easyGame {
     }
 
     function upgradeG1() public {
-        if(power1[msg.sender] == 0){
-            require(actPoints[msg.sender] >= 1000);
-            actPoints[msg.sender] = actPoints[msg.sender] - 1000;
-            power1[msg.sender]++;
-            xpPoints[msg.sender] = xpPoints[msg.sender] + 100; 
+        if(p1[msg.sender] == 0){
+            require(t[msg.sender] >= 1000);
+            t[msg.sender] = t[msg.sender] - 1000;
+            p1[msg.sender]++;
+            xp[msg.sender] = xp[msg.sender] + 100;  
         }
     }
 
     // EVERYTHING
 
-    function upLevel() public {
-        if(xpPoints[msg.sender] > 1000) {
-            level[msg.sender]++;
-        } else if(xpPoints[msg.sender] > 5000) {
-            level[msg.sender]++;
-        } else if(xpPoints[msg.sender] > 10000) {
-            level[msg.sender]++;
-        } else if(xpPoints[msg.sender] > 20000) {
-            level[msg.sender]++;
-        } else if(xpPoints[msg.sender] > 50000) {
-            level[msg.sender]++;
-        } else if(xpPoints[msg.sender] > 5000) {
-            level[msg.sender]++;
-        } else if(xpPoints[msg.sender] > 5000) {
-            level[msg.sender]++;
+    function upLev() public {
+        if(xp[msg.sender] > 1000) {
+            lev[msg.sender]++;
+        } else if(xp[msg.sender] > 5000) {
+            lev[msg.sender]++;
+        } else if(xp[msg.sender] > 10000) {
+            lev[msg.sender]++;
+        } else if(xp[msg.sender] > 20000) {
+            lev[msg.sender]++;
+        } else if(xp[msg.sender] > 50000) {
+            lev[msg.sender]++;
+        } else if(xp[msg.sender] > 5000) {
+            lev[msg.sender]++;
+        } else if(xp[msg.sender] > 5000) {
+            lev[msg.sender]++;
         }
     }
 
     function buyPoints(uint16 amount) public payable {
         if(amount == 1000) {
-            require(msg.value >= 1000000000000000000 wei); //revisa eso es 1 ETH
-            actPoints[msg.sender] = actPoints[msg.sender] + 1000;
+            require(msg.value >= 10000000000000000 wei); //revisa eso es 1 ETH
+            t[msg.sender] = t[msg.sender] + 1000;
         }
     }
 
